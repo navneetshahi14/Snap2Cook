@@ -1,9 +1,15 @@
-import { JwtPayload } from "jsonwebtoken";
+declare module "dotenv";
 
 declare global {
-  namespace Express {
-    export interface Request {
-      user?: JwtPayload & { id: number; email: string }; 
+    namespace Express{
+        interface Request{
+            user?: {
+                id:number,
+                email: string
+            }
+        }
     }
-  }
 }
+
+
+export {}

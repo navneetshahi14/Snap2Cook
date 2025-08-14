@@ -1,10 +1,10 @@
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 dotenv.config({quiet:true});
 import express from 'express';
-import { ENV } from './config/env.ts';
-import UserRouter from './routes/user.route.ts';
-import FavoritesRouter from './routes/food.route.ts';
-import job from './config/cron.ts';
+import { ENV } from './config/env.js';
+import UserRouter from './routes/user.route.js';
+import job from './config/cron.js';
+import FavoritesRouter from './routes/favorites.route.js';
 
 
 const app = express();
@@ -14,12 +14,18 @@ if(ENV.NODE_ENV === "production") job.start();
 
 app.use(express.json());
 
+
 app.use('/api/auth',UserRouter);
-app.use('/api/favorites',FavoritesRouter);
+app.use('/api/favorites',FavoritesRouter)
 
 app.get('/',(req,res)=>{
     res.status(200).json({success:true}) 
 })
+
+app.use((err: any, _req: import("express").Request, res: import("express").Response, _next: any) => {
+    console.error("Global Error:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  });
 
 app.listen(PORT,()=>{
     console.log(`Server Running at Port No. :=> ${PORT}`)

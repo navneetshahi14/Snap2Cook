@@ -1,25 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import { verifyJwt } from "../config/jwt.ts";
+import { verifyJwt } from "../config/jwt.js";
 
+export const authmiddleware = async (req:Request,res:Response,next:NextFunction) =>{
+    const token = req.headers.authorization?.split(" ")[1];
+    if(!token) return res.status(404).json({error:"Token is required"});
 
-export const authMiddleware = async( req:Request,res:Response,next:NextFunction ) =>{
     try{
 
-        const authHeader = req.headers.authorization;
+        const decoded = verifyJwt(token);
+        req.user = decoded;
 
-        if(!authHeader || !authHeader.startsWith("Bearer ")){
-            return res.status(401).json({message:"No token provided"});
-        }
-
-        const token = authHeader.split(" ")[1];
-
-        const user = verifyJwt(token);
-        (req as any).user = user;
-
-        next();
-        
     }catch(err:any){
-        console.log("Error message :--> ",err.message);
-        throw new Error("Invalid Token")
+        console.log(err.message);
+        return res.status(400).json({error:"Something went wrong with your authorization"});
     }
 }

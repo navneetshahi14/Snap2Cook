@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
-import { ENV } from './env.ts';
+import { ENV } from './env.js';
 
-interface JWTPayload {
-    id: string,
+export interface JWTPayload {
+    id: number,
     email: string,
     iat?: number,
     exp?: number
@@ -23,11 +23,11 @@ export const generateJWT = async(id:string,email:string) =>{
     
 }
 
-export const verifyJwt = (token:string):JWTPayload =>{
+export const verifyJwt = (token:string) =>{
     try{
 
         const decoded = jwt.verify(token,ENV.SECRETKEY as string) as JWTPayload;
-        return decoded;
+        return {id:decoded.id,email:decoded.email};
 
     }catch(err:any){
         console.log("Error message:--> ",err.message);

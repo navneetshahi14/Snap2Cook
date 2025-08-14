@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
-import {db} from '../config/db.ts';
-import { UsersTable } from '../db/schema.ts';
-import { generateJWT } from '../config/jwt.ts';
-import { hashPass, verifyPass } from '../config/hashPass.ts';
+import {db} from '../config/db.js';
+import { UsersTable } from '../db/schema.js';
+import { generateJWT } from '../config/jwt.js';
+import { hashPass, verifyPass } from '../config/hashPass.js';
 import { eq } from 'drizzle-orm';
 
 export const registerUser = async(req:Request,res:Response) =>{
     try{
-
         const {username,email,password} = req.body
 
         if(!username || !email || !password) {
@@ -22,7 +21,7 @@ export const registerUser = async(req:Request,res:Response) =>{
             password:hashedPass
         }).returning({id:UsersTable.id,email:UsersTable.email});
 
-        const token = generateJWT(newUser.id.toString(),newUser.email);
+        const token = await generateJWT(newUser.id.toString(),newUser.email);
 
         return res.status(200).json({message:"User created successfully",token,user:newUser});
 
