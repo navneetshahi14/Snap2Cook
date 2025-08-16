@@ -1,10 +1,11 @@
-import { Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import { StatusBar } from "react-native";
 
 export default function RootLayout() {
   return (
     <>
       <StatusBar barStyle={"light-content"}  />
+      <Redirect href={"/(tabs)"} />
       <Stack screenOptions={{
         headerShown: false,
       }} >
