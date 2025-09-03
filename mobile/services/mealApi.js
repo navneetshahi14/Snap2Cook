@@ -18,7 +18,7 @@ export const MealAPI = {
   // lookup full meal detail by id
   getMealById: async (id) => {
     try {
-      const response = fetch(`${Base_Url}/lookup.php?i=${id}`);
+      const response = await fetch(`${Base_Url}/lookup.php?i=${id}`);
       const data = await response.json();
       return data.meals ? data.meals[0] : null;
     } catch (err) {

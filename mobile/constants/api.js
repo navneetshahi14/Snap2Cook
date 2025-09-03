@@ -1,0 +1,1 @@
+export const API_URL = "https://snap2cook.onrender.com"

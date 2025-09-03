@@ -5,7 +5,7 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar barStyle={"light-content"}  />
-      <Redirect href={"/(tabs)"} />
+      {/* <Redirect href={"/(auth)"} /> */}
       <Stack screenOptions={{
         headerShown: false,
       }} >

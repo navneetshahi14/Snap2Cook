@@ -135,6 +135,10 @@ export const recipeDetailStyles = StyleSheet.create({
   },
   sectionContainer: {
     marginBottom: 32,
+    gap:10,
+    display:"flex",
+    flexDirection:"column",
+    alignItems:"center"
   },
   sectionTitleRow: {
     flexDirection: "row",
@@ -142,6 +146,7 @@ export const recipeDetailStyles = StyleSheet.create({
     gap: 12,
     flex: 1,
     marginBottom: 16,
+    width:"97%"
   },
   sectionIcon: {
     width: 32,
@@ -183,6 +188,9 @@ export const recipeDetailStyles = StyleSheet.create({
   },
   ingredientsGrid: {
     gap: 12,
+    display:"flex",
+    flexDirection:"column",
+    alignItems:"center"
   },
   ingredientCard: {
     flexDirection: "row",
@@ -196,6 +204,7 @@ export const recipeDetailStyles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
     gap: 12,
+    width:"98%"
   },
   ingredientNumber: {
     width: 28,
@@ -221,6 +230,9 @@ export const recipeDetailStyles = StyleSheet.create({
   },
   instructionsContainer: {
     gap: 16,
+    display:"flex",
+    flexDirection:"column",
+    alignItems:"center"
   },
   instructionCard: {
     flexDirection: "row",
@@ -233,6 +245,7 @@ export const recipeDetailStyles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
     gap: 16,
+    width:"98%"
   },
   stepIndicator: {
     width: 40,
@@ -282,6 +295,7 @@ export const recipeDetailStyles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
+    width:"98%"
   },
   buttonGradient: {
     flexDirection: "row",
