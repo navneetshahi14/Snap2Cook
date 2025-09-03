@@ -1,4 +1,4 @@
-const Base_Url = "www.themealdb.com/api/json/v1/1";
+const Base_Url = "https://www.themealdb.com/api/json/v1/1";
 
 export const MealAPI = {
   // search meal by name
@@ -30,11 +30,13 @@ export const MealAPI = {
   // lookup single random meal
   getRandom: async () => {
     try {
-      const response = fetch(`${Base_Url}/random.php`);
+      const response = await fetch(`${Base_Url}/random.php`);
+
+      // console.log(response)
       const data = await response.json();
       return data.meals ? data.meals[0] : null;
     } catch (err) {
-      console.error("Error getting random meal", err);
+      console.error("Error getting random meals", err);
       return null;
     }
   },
@@ -58,6 +60,7 @@ export const MealAPI = {
   getCategories: async () => {
     try {
       const response = await fetch(`${Base_Url}/categories.php`);
+      // console.log(response)
       const data = await response.json();
       return data.categories || [];
     } catch (err) {

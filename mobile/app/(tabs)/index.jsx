@@ -16,9 +16,10 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import CategoryFilter from '../../components/CategoryFilter';
 import RecipeCard from '../../components/RecipeCard';
-import {MealAPI} from '../../services/mealApi'
+import { MealAPI } from '../../services/mealApi'
 import LoadingSpinner from '../../components/LoadingSpinner'
 
+// const sleep = (ms) => new Promise((resolve) => setTimeout(resolve,ms))
 
 const HomeScreen = () => {
   const router = useRouter();
@@ -29,56 +30,56 @@ const HomeScreen = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadData = async() =>{
-    try{
+  const loadData = async () => {
+    try {
       setLoading(true);
-      const [apiCategories, randomMeals, featuredMeal] = Promise.all([
+      const [apiCategories, randomMeals, featuredMeal] = await Promise.all([
         MealAPI.getCategories(),
         MealAPI.getRandomMeals(12),
         MealAPI.getRandom()
       ])
 
-      const transformedCategories = apiCategories.map((cat,index)=>({
-        id:index+1,
-        name:cat.strCategory,
-        image:cat.strCategoryThumb,
-        description:cat.strCategoriesDescription
+      const transformedCategories = apiCategories.map((cat, index) => ({
+        id: index + 1,
+        name: cat.strCategory,
+        image: cat.strCategoryThumb,
+        description: cat.strCategoriesDescription
       }));
 
       setCategories(transformedCategories);
 
-      if(!selectedCategory) setSelectedCategory(transformedCategories[0].name);
+      if (!selectedCategory) setSelectedCategory(transformedCategories[0].name);
 
       const transformedMeal = randomMeals
-        .map((meal)=>MealAPI.transformMealData(meal))
-        .filter((meal)=>meal !== null);
+        .map((meal) => MealAPI.transformMealData(meal))
+        .filter((meal) => meal !== null);
 
       setRecipes(transformedMeal);
 
       const transformedFeatured = MealAPI.transformMealData(featuredMeal);
       setFeaturedRecipe(transformedFeatured);
 
-    }catch(err){
-      console.log("Error loading data: ",err);
-    }finally {
+    } catch (err) {
+      console.log("Error loading data: ", err);
+    } finally {
       setLoading(false)
     }
-  } 
+  }
 
-  const loadCategoryData = async (category) =>{
+  const loadCategoryData = async (category) => {
     try {
 
       const meals = await MealAPI.filterByCategories(category);
-      const transformedMeals = meals.map((meal)=> MealAPI.transformMealData(meal)).filter((meal) => meal!==null);
+      const transformedMeals = meals.map((meal) => MealAPI.transformMealData(meal)).filter((meal) => meal !== null);
       setRecipes(transformedMeals);
 
     } catch (err) {
-      console.log("Error loading Category data",err);
+      console.log("Error loading Category data", err);
       setRecipes([]);
     }
   }
 
-  const handleCategorySelect = async(category) =>{
+  const handleCategorySelect = async (category) => {
     setSelectedCategory(category);
     await loadCategoryData(category);
   }
@@ -89,11 +90,11 @@ const HomeScreen = () => {
     setRefreshing(false);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     loadData()
-  },[]);
+  }, []);
 
-  if(loading && !refreshing) return <LoadingSpinner message="Loading delicious recipe....." />
+  if (loading && !refreshing) return <LoadingSpinner message="Loading delicious recipe....." />
 
   return (
     <View style={[homeStyles.container, styling.cont]}>
@@ -198,7 +199,7 @@ const HomeScreen = () => {
           </View>
         )}
 
-{categories.length > 0 && (
+        {categories.length > 0 && (
           <CategoryFilter
             categories={categories}
             selectedCategory={selectedCategory}
@@ -220,7 +221,7 @@ const HomeScreen = () => {
               columnWrapperStyle={homeStyles.row}
               contentContainerStyle={homeStyles.recipesGrid}
               scrollEnabled={false}
-              // ListEmptyComponent={}
+            // ListEmptyComponent={}
             />
           ) : (
             <View style={homeStyles.emptyState}>
