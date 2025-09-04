@@ -9,6 +9,7 @@ export const authmiddleware = async (req:Request,res:Response,next:NextFunction)
 
         const decoded = verifyJwt(token);
         req.user = decoded;
+        next();
 
     }catch(err:any){
         console.log(err.message);
