@@ -1,9 +1,34 @@
 import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { COLORS } from '../../constants/colors'
 import { router } from 'expo-router'
+import { API_URL } from '../../constants/api'
+import * as SecureStore from 'expo-secure-store';
 
 const index = () => {
+
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("")
+
+
+  const handleLogin = async () =>{
+    const data = await fetch(`${API_URL}/api/auth/login`,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body:JSON.stringify({
+        email,password
+      })
+    })
+
+    const res = await data.json();
+
+    console.log(res.token)
+    await SecureStore.setItemAsync('token',res?.token)
+    router.push('/(tabs)');
+  }
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -16,10 +41,10 @@ const index = () => {
           <Text style={styles.WelcomeText}>
             Welcome Back
           </Text>
-          <TextInput placeholder='Email' style={styles.textInput} />
-          <TextInput placeholder='Password' style={styles.textInput} />
+          <TextInput placeholder='Email' style={styles.textInput} onChangeText={setEmail} />
+          <TextInput placeholder='Password' style={styles.textInput} onChangeText={setPassword} />
           <TouchableOpacity style={styles.btnSupport}>
-            <Text onLongPress={()=>router.push('/verify-email')} style={styles.btnStyle}>
+            <Text onPress={handleLogin} style={styles.btnStyle}>
               Login
             </Text>
           </TouchableOpacity>

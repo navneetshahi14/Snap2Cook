@@ -7,11 +7,53 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { COLORS } from "../../constants/colors";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
+import { API_URL } from "../../constants/api";
+
+import * as SecureStore from 'expo-secure-store';
 
 const VerifyEmail = () => {
+
+  const router = useRouter()
+
+  const [email,setEmail] = useState("");
+  const [otp,setOtp] = useState("");
+
+  const handleVerifyEmail = async() =>{
+
+    const mailed = await SecureStore.getItemAsync('user');
+    const allMail = await JSON.parse(mailed);
+    const mail= allMail?.email
+    console.log(mail);
+    setEmail(mail);
+    // await SecureStore.deleteItemAsync('email');
+
+    const tokens = await SecureStore.getItemAsync('user');
+    console.log(tokens)
+    const alltoke = await JSON.parse(tokens)
+    console.log(alltoke)
+    const token = alltoke?.token
+    console.log(token)
+    const data = await fetch(`${API_URL}/api/auth/verifyEmail`,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body:JSON.stringify({
+        email,otp,token
+      })
+    })
+
+    const res = await data.json();
+
+    await SecureStore.deleteItemAsync('user')
+    await SecureStore.setItemAsync('token',JSON.stringify(res?.token));
+
+    router.push('/(tabs)')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
@@ -25,8 +67,8 @@ const VerifyEmail = () => {
       </View>
       <View style={styles.MainContainer}>
         <Text style={styles.WelcomeText}>Verify Email</Text>
-        <TextInput placeholder="Enter Verification Code" style={styles.textInput} />
-        <TouchableOpacity onPressOut={()=>router.push('/(tabs)')} style={styles.btnSupport}>
+        <TextInput placeholder="Enter Verification Code" style={styles.textInput} onChangeText={setOtp} />
+        <TouchableOpacity onPress={handleVerifyEmail} style={styles.btnSupport}>
           <Text style={styles.btnStyle}>Verify Email</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>router.back()} style={styles.btnSupport}>

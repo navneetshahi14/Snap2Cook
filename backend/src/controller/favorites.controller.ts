@@ -63,7 +63,9 @@ export const allFavorites = async(req:Request,res:Response) =>{
 
     try{
 
-        await db.select().from(favoritesTable).where(eq(favoritesTable.userId,userId));
+        const data = await db.select().from(favoritesTable).where(eq(favoritesTable.userId,userId));
+
+        res.status(200).json(data);
 
     }catch(err:any){
         console.log(err.message);

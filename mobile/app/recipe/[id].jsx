@@ -9,6 +9,8 @@ import { Ionicons } from '@expo/vector-icons'
 import { COLORS } from '../../constants/colors'
 import { MealAPI } from '../../services/mealApi';
 import { WebView } from 'react-native-webview';
+import { API_URL } from '../../constants/api'
+import * as SecureStore from 'expo-secure-store'
 
 const RecipeDetailScreen = () => {
 
@@ -20,7 +22,23 @@ const RecipeDetailScreen = () => {
     const [isSaved, setIsSaved] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
+    const userIdGet = async () => {
+        const userId = await SecureStore.getItemAsync("token");
+        return userId;
+    }
     useEffect(() => {
+
+        const checkIfSaved = async () => {
+            try {
+                const response = await fetch(`${API_URL}/favorites/${userId}`);
+                const favorites = await response.json();
+                const isRecipeSaved = favorites.some((fav) => fav.recipeId === parseInt(recipeId));
+                setIsSaved(isRecipeSaved);
+            } catch (error) {
+                console.error("Error checking if recipe is saved:", error);
+            }
+        };
+
         const loadRecipeDetail = async () => {
             setLoading(true);
             try {
@@ -48,20 +66,52 @@ const RecipeDetailScreen = () => {
         return `https://www.youtube.com/embed/${videoId}`;
     }
 
-    const handleToggleSave = () => {
+    const handleToggleSave = async () => {
         setIsSaved(true);
-
+        const token = await userIdGet();
         try {
             if (isSaved) {
+                const response = await fetch(`${API_URL}/favorites/${recipeId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) throw new Error("Failed to remove recipe");
 
+                setIsSaved(false);
+            } else {
+                const response = await fetch(`${API_URL}/api/favorites/save`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        recipeId: parseInt(recipeId),
+                        title: recipe.title,
+                        image: recipe.image,
+                        cookTime: recipe.cookTime,
+                        servings: recipe.servings,
+                    }),
+                });
+
+                if (!response.ok) throw new Error("Failed to save recipe");
+                setIsSaved(true);
             }
 
         } catch (err) {
-
+            console.error("Error toggling recipe save:", err);
+            Alert.alert("Error", `Something went wrong. Please try again.`);
+        }
+        finally {
+            setIsSaved(false);
         }
     }
 
-    
+    // if (loading) return <LoadingSpinner message="Loading recipe details..." />;
+
     return (
         <View style={recipeDetailStyles.container}>
             <ScrollView>

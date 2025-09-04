@@ -89,7 +89,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
         const [user] = await db.select().from(UsersTable).where(eq(UsersTable.email,email));
 
-        const token_generated = generateJWT(user.id.toString(),user.email);
+        const token_generated = await generateJWT(user.id.toString(),user.email);
 
         return res.status(200).json({ message: "Email verified successfully!",token:token_generated ,user});
 

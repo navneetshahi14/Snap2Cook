@@ -18,6 +18,7 @@ import CategoryFilter from '../../components/CategoryFilter';
 import RecipeCard from '../../components/RecipeCard';
 import { MealAPI } from '../../services/mealApi'
 import LoadingSpinner from '../../components/LoadingSpinner'
+import * as SecureStore from 'expo-secure-store';
 
 // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve,ms))
 
