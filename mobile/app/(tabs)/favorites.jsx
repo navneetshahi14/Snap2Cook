@@ -42,21 +42,16 @@ const favorites = () => {
         const favorites = await response.json();
 
         const transformedFavorites = favorites.map((favorite)=>({
-          ...favorites,
+          ...favorite,
           id: favorite.recipeId
         }));
 
-        setFavoriteRecipe(transformedFavorites);
-
-        
+        setFavoriteRecipe(transformedFavorites);        
       } catch (err) {
-
         console.log("Error loading Favorites")
         Alert.alert("Error","Failed to load favorites")
       } finally {
-
         setLoading(false);
-
       }
     }
 
@@ -75,7 +70,7 @@ const favorites = () => {
     router.push("/(auth)")
   }
 
-  // if(loading) return <LoadingSpinner message="Loading your favorites..." />;
+  // if(loading) return <LoadingSpinner message="Loading your favorites..." />
 
   return (
     <View style={favoritesStyles.container}>

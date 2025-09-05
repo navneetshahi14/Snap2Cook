@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "mobile",
+    "name": "Snap2Cook",
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/splash-icon.png",
     "scheme": "mobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,10 +13,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/splash-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.navneet_shahi04.mobile"
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +39,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "debd26f6-a80c-46f8-b000-93daeea7ff39"
+      }
+    },
+    "owner": "navneet_shahi04"
   }
 }

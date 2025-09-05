@@ -30,7 +30,13 @@ const RecipeDetailScreen = () => {
 
         const checkIfSaved = async () => {
             try {
-                const response = await fetch(`${API_URL}/favorites/${userId}`);
+                const token = await userIdGet();
+                const response = await fetch(`${API_URL}/api/favorites`,{
+                    headers:{
+                        "Content-Type":"application/json",
+                        "Authorization":`Bearer ${token}`
+                    }
+                });
                 const favorites = await response.json();
                 const isRecipeSaved = favorites.some((fav) => fav.recipeId === parseInt(recipeId));
                 setIsSaved(isRecipeSaved);
@@ -58,6 +64,7 @@ const RecipeDetailScreen = () => {
             }
         }
 
+        checkIfSaved();
         loadRecipeDetail();
     }, [recipeId]);
 
